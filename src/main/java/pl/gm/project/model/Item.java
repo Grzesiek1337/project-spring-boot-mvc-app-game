@@ -25,4 +25,6 @@ public class Item {
     private int increaseHealth;
 
     private int increasePower;
+
+    private int price;
 }
