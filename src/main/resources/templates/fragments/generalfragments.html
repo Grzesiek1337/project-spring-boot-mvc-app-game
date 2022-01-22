@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="headerfiles">
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<header th:fragment="header">
+    <div class="bg-dark p-3 d-flex">
+        <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" fill="currentColor"
+             class="bi bi-joystick mt-4 ms-2" style="color: white" viewBox="0 0 16 16">
+            <path d="m7.788 2.34-.799 1.278A.25.25 0 0 0 7.201 4h1.598a.25.25 0 0 0 .212-.382l-.799-1.279a.25.25 0 0 0-.424 0Zm0 11.32-.799-1.277A.25.25 0 0 1 7.201 12h1.598a.25.25 0 0 1 .212.383l-.799 1.278a.25.25 0 0 1-.424 0ZM3.617 9.01 2.34 8.213a.25.25 0 0 1 0-.424l1.278-.799A.25.25 0 0 1 4 7.201V8.8a.25.25 0 0 1-.383.212Zm10.043-.798-1.277.799A.25.25 0 0 1 12 8.799V7.2a.25.25 0 0 1 .383-.212l1.278.799a.25.25 0 0 1 0 .424Z"/>
+            <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5v3a.5.5 0 0 1-.5.5h-3A1.5 1.5 0 0 0 0 6.5v3A1.5 1.5 0 0 0 1.5 11h3a.5.5 0 0 1 .5.5v3A1.5 1.5 0 0 0 6.5 16h3a1.5 1.5 0 0 0 1.5-1.5v-3a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 0 16 9.5v-3A1.5 1.5 0 0 0 14.5 5h-3a.5.5 0 0 1-.5-.5v-3A1.5 1.5 0 0 0 9.5 0h-3ZM6 1.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v3A1.5 1.5 0 0 0 11.5 6h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5h-3a1.5 1.5 0 0 0-1.5 1.5v3a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-3A1.5 1.5 0 0 0 4.5 10h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 0 6 4.5v-3Z"/>
+        </svg>
+
+
+        <p class="fw-bold fs-1 mt-3" style="letter-spacing: 1px; color: white; font-size: 15px ; font-family:'Arial Black'">Lets</p>
+        <a th:href="@{/}" class=" text-decoration-none  fs-1 mt-3" style="color: yellow">PLAY</a>
+
+    </div>
+</header>
+
+<nav th:fragment="indexNaviBar">
+    <div class="bg-dark d-flex flex-row p-1">
+        <div class="p-2 ms-5">
+            <a th:href="@{/game}" class="btn btn-outline-success">Play</a>
+        </div>
+        <div class="p-2" sec:authorize="!isAuthenticated()">
+            <a th:href="@{/user/user_create}" class="btn btn-outline-warning">Sign Up</a>
+        </div>
+        <div class="p-2" sec:authorize="isAuthenticated()">
+            <form th:action="@{/logout}" method="post">
+                <input class="btn btn-outline-info" type="submit" value="Logout"/>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<nav th:fragment="loggedNaviBar">
+    <div class="bg-dark p-2 d-flex justify-content-around">
+        <div class="d-flex flex-column" sec:authorize="isAuthenticated()">
+            <a class="text-white text-decoration-none" th:text="${'Logged as: ' + user.getUsername()}"></a>
+            <a class="text-white text-decoration-none"
+               th:text="${'Current date: ' + #temporals.format(localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+        </div>
+        <div class="ms-auto p-2" sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin}" class="btn btn-outline-warning">Admin Panel</a>
+        </div>
+        <div class="ms-auto p-2" sec:authorize="isAuthenticated()">
+            <form th:action="@{/logout}" method="post">
+                <input class="btn btn-outline-info" type="submit" value="Logout"/>
+            </form>
+        </div>
+    </div>
+</nav>
+<nav th:fragment="gameNaviBar">
+    <div class="p-2 d-flex justify-content-around bg-gradient bg-dark">
+        <div class="bg-dark  bg-gradient d-flex">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor"
+                 class="bi bi-yin-yang pt-3" style="color: white" viewBox="0 0 16 16">
+                <path d="M9.167 4.5a1.167 1.167 0 1 1-2.334 0 1.167 1.167 0 0 1 2.334 0Z"/>
+                <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0ZM1 8a7 7 0 0 1 7-7 3.5 3.5 0 1 1 0 7 3.5 3.5 0 1 0 0 7 7 7 0 0 1-7-7Zm7 4.667a1.167 1.167 0 1 1 0-2.334 1.167 1.167 0 0 1 0 2.334Z"/>
+            </svg>
+            <a class="text-white text-decoration-none p-2 fs-2" th:href="@{/game/arena}">Arena</a>
+        </div>
+        <div class="bg-dark  bg-gradient d-flex">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-bank pt-3"
+                 style="color: white" viewBox="0 0 16 16">
+                <path d="M8 .95 14.61 4h.89a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5H15v7a.5.5 0 0 1 .485.379l.5 2A.5.5 0 0 1 15.5 17H.5a.5.5 0 0 1-.485-.621l.5-2A.5.5 0 0 1 1 14V7H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 4h.89L8 .95zM3.776 4h8.447L8 2.05 3.776 4zM2 7v7h1V7H2zm2 0v7h2.5V7H4zm3.5 0v7h1V7h-1zm2 0v7H12V7H9.5zM13 7v7h1V7h-1zm2-1V5H1v1h14zm-.39 9H1.39l-.25 1h13.72l-.25-1z"/>
+            </svg>
+            <a class="text-white text-decoration-none p-2 fs-2" th:href="@{/game/temple}">Temple</a>
+        </div>
+        <div class="bg-dark  bg-gradient d-flex">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor"
+                 class="bi bi-cash-coin pt-3" style="color: white" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M11 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm5-4a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/>
+                <path d="M9.438 11.944c.047.596.518 1.06 1.363 1.116v.44h.375v-.443c.875-.061 1.386-.529 1.386-1.207 0-.618-.39-.936-1.09-1.1l-.296-.07v-1.2c.376.043.614.248.671.532h.658c-.047-.575-.54-1.024-1.329-1.073V8.5h-.375v.45c-.747.073-1.255.522-1.255 1.158 0 .562.378.92 1.007 1.066l.248.061v1.272c-.384-.058-.639-.27-.696-.563h-.668zm1.36-1.354c-.369-.085-.569-.26-.569-.522 0-.294.216-.514.572-.578v1.1h-.003zm.432.746c.449.104.655.272.655.569 0 .339-.257.571-.709.614v-1.195l.054.012z"/>
+                <path d="M1 0a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4.083c.058-.344.145-.678.258-1H3a2 2 0 0 0-2-2V3a2 2 0 0 0 2-2h10a2 2 0 0 0 2 2v3.528c.38.34.717.728 1 1.154V1a1 1 0 0 0-1-1H1z"/>
+                <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 5.982 5.982 0 0 1 3.13-1.567z"/>
+            </svg>
+            <a class="text-white text-decoration-none p-2 fs-2" th:href="@{/game/shop}">Shop</a>
+        </div>
+    </div>
+</nav>
+
+<nav th:fragment="heroInfoBar">
+    <div class="p-2 d-flex justify-content-around bg-dark">
+        <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family:Consolas">Level: <a
+                class="text-white text-decoration-none" th:text="${user.getUserHeroLevel()}"></a></p>
+        <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family: Consolas">Name: <a
+                class="text-white text-decoration-none" th:text="${user.getUserHeroName()}"></a></p>
+        <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family: Consolas">Attack: <a
+                class="text-white text-decoration-none" th:text="${user.getUserHeroAttack()}"></a></p>
+        <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family: Consolas">Health: <a
+                class="text-white text-decoration-none" th:text="${user.getUserHeroHealth()}"></a></p>
+        <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family: Consolas">Experience: <a
+                class="text-white text-decoration-none" th:text="${user.getUserHeroExperience()}"></a></p>
+        <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family: Consolas">Gold: <a
+                class="text-white text-decoration-none" th:text="${user.getUserHeroGold()}"></a></p>
+    </div>
+</nav>
+
+
+<footer th:fragment="footer">
+    <div class="p-5 bg-dark bg-gradient text-white d-flex justify-content-evenly">
+        <a  th:text="${'© Copyright -GM 2022'}"></a>
+    </div>
+</footer>
+
+</body>
+</html>
