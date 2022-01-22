@@ -7,9 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.gm.project.model.Hero;
+import pl.gm.project.model.Item;
 import pl.gm.project.model.User;
 import pl.gm.project.service.CurrentUserDetails;
 import pl.gm.project.service.HeroService;
+import pl.gm.project.service.ItemService;
 import pl.gm.project.service.UserService;
 
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ public class AdminPanelController {
     @Autowired
     private HeroService heroService;
     private UserService userService;
+    private ItemService itemService;
 
     @ModelAttribute("user")
     public CurrentUserDetails getUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
@@ -112,5 +115,16 @@ public class AdminPanelController {
         userService.delete(id);
         model.addAttribute("userId", null);
         return "redirect:/admin/user_list";
+    }
+    @GetMapping("/item_new")
+    public String showNewItemPage(Model model) {
+        model.addAttribute("item", new Item());
+        return "admincontent/item/item_new";
+    }
+
+    @PostMapping("/item_new")
+    public String saveItem(@ModelAttribute("item") Item item) {
+        itemService.save(item);
+        return "redirect:/admin";
     }
 }
