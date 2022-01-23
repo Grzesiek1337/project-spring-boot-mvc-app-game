@@ -6,12 +6,18 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.gm.project.model.Item;
 import pl.gm.project.repository.ItemRepository;
 
+import java.util.List;
+
 @Service
 @Transactional
 public class ItemService {
 
     @Autowired
     private ItemRepository itemRepository;
+
+    public List<Item> listAll() {
+        return itemRepository.findAll();
+    }
 
     public void save(Item item) {
         itemRepository.save(item);
