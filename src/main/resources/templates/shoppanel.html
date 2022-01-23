@@ -13,7 +13,37 @@
 <header th:insert="fragments/generalfragments.html :: loggedNaviBar"> </header>
 <header th:insert="fragments/generalfragments.html :: gameNaviBar"> </header>
 <header th:insert="fragments/generalfragments.html :: heroInfoBar"> </header>
-
+<div>
+    <a th:text="${goldAmountNotEnought}"></a>
+    <a th:text="${successBuy}"></a>
+    <a th:text="${'Welcome in shop!'}"></a>
+    <table>
+        <thead>
+        <tr>
+            <th>Item ID</th>
+            <th>Name</th>
+            <th>IncATK</th>
+            <th>IncHP</th>
+            <th>IncPOW</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${shopItems}">
+            <td th:text="${item.id}">Item ID</td>
+            <td th:text="${item.name}">Item name</td>
+            <td th:text="${item.increaseAttack}">IncATK</td>
+            <td th:text="${item.increaseHealth}">IncHP</td>
+            <td th:text="${item.increasePower}">IncPOW</td>
+            <td th:text="${item.price}">Price</td>
+            <td>
+                <a th:href="@{'/game/shop/item_buy/' + ${item.id}}">Buy</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/admin">Return</a>
+</div>
 
 
 
