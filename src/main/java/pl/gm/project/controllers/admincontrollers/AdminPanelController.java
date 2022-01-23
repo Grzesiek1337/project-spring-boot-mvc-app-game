@@ -116,6 +116,14 @@ public class AdminPanelController {
         model.addAttribute("userId", null);
         return "redirect:/admin/user_list";
     }
+
+    @GetMapping("/item_list")
+    public String viewListOfItems(Model model) {
+        Iterable<Item> items = itemService.listAll();
+        model.addAttribute("itemList", items);
+        return "admincontent/item/item_list";
+    }
+
     @GetMapping("/item_new")
     public String showNewItemPage(Model model) {
         model.addAttribute("item", new Item());
