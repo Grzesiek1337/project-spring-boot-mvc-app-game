@@ -10,37 +10,35 @@
 <body>
 <header th:insert="fragments/generalfragments.html :: header"> </header>
 <header th:insert="fragments/generalfragments.html :: loggedNaviBar"> </header>
-<div>
-    <h1>Create New User</h1>
-    <br />
+<div class="bg-dark d-flex justify-content-center">
     <form action="#" th:action="@{/admin/item_new}" th:object="${item}"
           method="post">
-
-        <table>
+        <table class="d-flex flex-column">
             <tr>
-                <td>Item Name:</td>
+                <td class="text-white text-decoration-none">Item Name:</td>
                 <td><input type="text" th:field="*{name}" /></td>
             </tr>
             <tr>
-                <td>Increasing Attack:</td>
-                <td><input type="number" th:field="*{increaseAttack}" /></td>
+                <td class="text-white text-decoration-none">Increasing  Max Attack:</td>
+                <td><input type="number" th:field="*{increaseMaxAttack}" /></td>
             </tr>
             <tr>
-                <td>Increasing Health:</td>
+                <td class="text-white text-decoration-none">Increasing Health:</td>
                 <td><input type="number" th:field="*{increaseHealth}" /></td>
             </tr>
             <tr>
-                <td>Increase Power:</td>
-                <td><input type="number" th:field="*{increasePower}" /></td>
+                <td class="text-white text-decoration-none">Increase Min Attack:</td>
+                <td><input type="number" th:field="*{increaseMinAttack}" /></td>
             </tr>
             <tr>
-                <td>Price:</td>
+                <td class="text-white text-decoration-none">Price:</td>
                 <td><input type="number" th:field="*{price}" /></td>
             </tr>
             <tr>
                 <td colspan="2"><button type="submit">Create</button> </td>
             </tr>
         </table>
+        <a class="text-decoration-none" style="color: yellow" th:href="@{'/admin'}">Return</a>
     </form>
 </div>
 <footer th:replace="fragments/generalfragments.html :: footer"></footer>
