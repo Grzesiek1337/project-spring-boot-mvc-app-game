@@ -11,42 +11,42 @@
 <body>
 <header th:insert="fragments/generalfragments.html :: header"></header>
 <header th:insert="fragments/generalfragments.html :: loggedNaviBar"></header>
-<div>
+<div class="bg-dark d-flex justify-content-center">
     <table>
         <thead>
         <tr>
-            <th>Hero ID</th>
-            <th>Name</th>
-            <th>Attack</th>
-            <th>Health</th>
-            <th>Level</th>
-            <th>Experience</th>
-            <th>Gold</th>
-            <th>Owner:</th>
+            <th class="text-white text-decoration-none">Hero ID</th>
+            <th class="text-white text-decoration-none">Name</th>
+            <th class="text-white text-decoration-none">MinAttack</th>
+            <th class="text-white text-decoration-none">MaxAttack</th>
+            <th class="text-white text-decoration-none">Health</th>
+            <th class="text-white text-decoration-none">MaximumHealth</th>
+            <th class="text-white text-decoration-none">Level</th>
+            <th class="text-white text-decoration-none">Experience</th>
+            <th class="text-white text-decoration-none">Gold</th>
+            <th class="text-white text-decoration-none">Owner:</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="hero : ${heroList}">
-            <td th:text="${hero.id}">Hero ID</td>
-            <td th:text="${hero.name}">Name</td>
-            <td th:text="${hero.attack}">Name</td>
-            <td th:text="${hero.health}">Health</td>
-            <td th:text="${hero.level}">Level</td>
-            <td th:text="${hero.experience}">Level</td>
-            <td th:text="${hero.gold}">Gold</td>
-            <td th:text="${hero.getUserName()}">User</td>
-
+            <td class="text-white text-decoration-none" th:text="${hero.id}">Hero ID</td>
+            <td class="text-white text-decoration-none" th:text="${hero.name}">Name</td>
+            <td class="text-white text-decoration-none" th:text="${hero.minAttack}">Name</td>
+            <td class="text-white text-decoration-none" th:text="${hero.maxAttack}">Name</td>
+            <td class="text-white text-decoration-none" th:text="${hero.health}">Health</td>
+            <td class="text-white text-decoration-none" th:text="${hero.maximumHealth}">Health</td>
+            <td class="text-white text-decoration-none" th:text="${hero.level}">Level</td>
+            <td class="text-white text-decoration-none" th:text="${hero.experience}">Level</td>
+            <td class="text-white text-decoration-none" th:text="${hero.gold}">Gold</td>
+            <td class="text-white text-decoration-none" th:text="${hero.user}">User</td>
             <td>
                 <a th:href="@{'/admin/hero_edit/' + ${hero.id}}">Edit</a>
-                &nbsp;&nbsp;&nbsp;
-                <a th:href="@{'/admin/hero_remove/' + ${hero.id}}">Delete</a>
             </td>
         </tr>
         </tbody>
+        <a class="text-decoration-none" style="color: yellow" th:href="@{'/admin'}">Return</a>
     </table>
-    <a th:href="@{'/admin'}">Return</a>
 </div>
 <footer th:replace="fragments/generalfragments.html :: footer"></footer>
-
 </body>
 </html>
