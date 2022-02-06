@@ -10,29 +10,29 @@
 <body>
 <header th:insert="fragments/generalfragments.html :: header"> </header>
 <header th:insert="fragments/generalfragments.html :: loggedNaviBar"> </header>
-<div>
+<div class="bg-dark d-flex justify-content-center">
     <table>
         <thead>
         <tr>
-            <th>User ID</th>
-            <th>User Name</th>
-            <th>User Role</th>
-            <th>User Enabled</th>
+            <th class="text-white text-decoration-none">User ID</th>
+            <th class="text-white text-decoration-none">User Name</th>
+            <th class="text-white text-decoration-none">User Role</th>
+            <th class="text-white text-decoration-none">User Enabled</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="user : ${userList}">
-            <td th:text="${user.id}">Hero ID</td>
-            <td th:text="${user.username}">Name</td>
-            <td th:text="${user.role}">Name</td>
-            <td th:text="${user.enabled}">Health</td>
+            <td class="text-white text-decoration-none" th:text="${user.id}">Hero ID</td>
+            <td class="text-white text-decoration-none" th:text="${user.username}">Name</td>
+            <td class="text-white text-decoration-none" th:text="${user.role}">Name</td>
+            <td class="text-white text-decoration-none" th:text="${user.enabled}">Health</td>
             <td>
                 <a th:href="@{'/admin/user_remove/' + ${user.id}}">Delete</a>
             </td>
         </tr>
         </tbody>
+        <a class="text-decoration-none" style="color: yellow" th:href="@{'/admin'}">Return</a>
     </table>
-    <a href="/admin">Return</a>
 </div>
 <footer th:replace="fragments/generalfragments.html :: footer"></footer>
 </body>
