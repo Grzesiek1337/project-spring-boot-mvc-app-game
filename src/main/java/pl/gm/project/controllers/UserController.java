@@ -34,7 +34,6 @@ public class UserController {
     }
 
     @PostMapping("/user_create")
-
     public String saveUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "usercontent/user/user_create";
@@ -46,25 +45,11 @@ public class UserController {
         model.addAttribute("successCreatingAccountMsg", "U have successfully created your account! Log and play!");
         userService.saveNewUser(user);
         return "index";
-
-
     }
-
 
     @PostMapping("/hero_create")
-    public String saveHeroForUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Hero hero) {
-        Hero heroForUser = new Hero();
-        heroForUser.setName(hero.getName());
-        heroForUser.setAttack(5);
-        heroForUser.setHealth(100);
-        heroForUser.setLevel(0);
-        heroForUser.setExperience(0);
-        heroForUser.setGold(0);
-        heroForUser.setUser(currentUserDetails.getUser());
-        currentUserDetails.setHero(heroForUser);
-        userService.update(currentUserDetails.getUser());
+    public String saveHeroForUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails,Hero hero) {
+        heroService.createHeroForUser(currentUserDetails,hero);
         return "redirect:/game";
     }
-
-
 }
