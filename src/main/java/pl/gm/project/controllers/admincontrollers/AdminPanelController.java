@@ -8,12 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.gm.project.model.Hero;
 import pl.gm.project.model.Item;
+import pl.gm.project.model.Mob;
 import pl.gm.project.model.User;
-import pl.gm.project.service.CurrentUserDetails;
-import pl.gm.project.service.HeroService;
-import pl.gm.project.service.ItemService;
-import pl.gm.project.service.UserService;
-
+import pl.gm.project.service.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,6 +23,7 @@ public class AdminPanelController {
     private HeroService heroService;
     private UserService userService;
     private ItemService itemService;
+    private MobService mobService;
 
     @ModelAttribute("user")
     public CurrentUserDetails getUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
@@ -133,6 +131,25 @@ public class AdminPanelController {
     @PostMapping("/item_new")
     public String saveItem(@ModelAttribute("item") Item item) {
         itemService.save(item);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/mob_list")
+    public String viewListOfMobs(Model model) {
+        List<Mob> mobs = mobService.listAll();
+        model.addAttribute("mobList", mobs);
+        return "admincontent/mob/mob_list";
+    }
+
+    @GetMapping("/mob_new")
+    public String showNewMobPage(Model model) {
+        model.addAttribute("mob", new Mob());
+        return "admincontent/mob/mob_new";
+    }
+
+    @PostMapping("/mob_new")
+    public String saveMob(@ModelAttribute("mob") Mob mob) {
+        mobService.save(mob);
         return "redirect:/admin";
     }
 }
