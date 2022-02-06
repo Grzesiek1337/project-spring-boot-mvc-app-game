@@ -13,7 +13,6 @@ import pl.gm.project.repository.UserRepository;
 @AllArgsConstructor
 public class UserService {
 
-
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
