@@ -13,15 +13,31 @@
 <header th:insert="fragments/generalfragments.html :: loggedNaviBar"> </header>
 <header th:insert="fragments/generalfragments.html :: gameNaviBar"> </header>
 <header th:insert="fragments/generalfragments.html :: heroInfoBar"> </header>
-
-
-
-
-
-
-
-
-
+<div class="bg-dark d-flex justify-content-center">
+    <table>
+        <thead>
+        <tr>
+            <th class="text-white text-decoration-none">Mob</th>
+            <th class="text-white text-decoration-none">Level</th>
+            <th class="text-white text-decoration-none">MinATK</th>
+            <th class="text-white text-decoration-none">MaxATK</th>
+            <th class="text-white text-decoration-none">Health</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="mob : ${mobs}">
+            <td class="text-white text-decoration-none" th:text="${mob.name}"></td>
+            <td class="text-white text-decoration-none" th:text="${mob.level}">Price</td>
+            <td class="text-white text-decoration-none" th:text="${mob.minAttack}"></td>
+            <td class="text-white text-decoration-none" th:text="${mob.maxAttack}"></td>
+            <td class="text-white text-decoration-none" th:text="${mob.health}"></td>
+            <td>
+                <a class="text-decoration-none" style="color: red" th:href="@{'/game/arena/fight/' + ${mob.id}}">Fight!</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 <footer th:replace="fragments/generalfragments.html :: footer"></footer>
 </body>
 </html>
