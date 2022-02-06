@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>Application Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+</head>
+<body>
+<header th:insert="fragments/generalfragments.html :: header"></header>
+<header th:insert="fragments/generalfragments.html :: loggedNaviBar"></header>
+<header th:insert="fragments/generalfragments.html :: gameNaviBar"></header>
+<div class="bg-dark d-flex justify-content-center">
+    <div class="d-flex flex-column">
+        <a class="text-white text-decoration-none" th:text="${'Hero :' + userHero.name}"></a>
+        <a class="text-white text-decoration-none" th:text="${'Health :' + userHero.health + '/' + userHero.maximumHealth}"></a>
+        <a class="text-white text-decoration-none"
+           th:text="${'Attack :' + userHero.minAttack + '-' + userHero.maxAttack}"></a>
+        <a class="text-white text-decoration-none" th:text="${'Level :' + userHero.level}"></a>
+    </div>
+    <div class="d-flex flex-column">
+        <a class="text-decoration-none btn btn-outline-warning" th:href="@{'/game/arena/attack/' + ${mob.name} + '/' + ${mob.minAttack} + '/' + ${mob.maxAttack} + '/' + ${mob.health} + '/' + ${mob.level}}">Attack!</a>
+        <a class="text-decoration-none" style="color: green" th:text="${hitMobMsg}"></a>
+        <a class="text-decoration-none" style="color: red" th:text="${hitHeroMsg}"></a>
+    </div>
+    <div class="d-flex flex-column">
+        <a class="text-white text-decoration-none" th:text="${'Mob :' + mob.name}"></a>
+        <a class="text-white text-decoration-none" th:text="${'Health :' + mob.health}"></a>
+        <a class="text-white text-decoration-none" th:text="${'Attack :' + mob.minAttack + '-' + mob.maxAttack}"></a>
+        <a class="text-white text-decoration-none" th:text="${'Level :' + mob.level}"></a>
+    </div>
+</div>
+<footer th:replace="fragments/generalfragments.html :: footer"></footer>
+</body>
+</html>
