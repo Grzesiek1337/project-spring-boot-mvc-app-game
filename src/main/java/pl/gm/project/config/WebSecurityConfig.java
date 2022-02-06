@@ -49,16 +49,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutSuccessUrl("/");
     }
-
 }
-//http.authorizeRequests()
-//
-//        .antMatchers("/").permitAll()
-//        .antMatchers("/hero/**").permitAll()
-//        .antMatchers("/user/**").permitAll()
-//        .antMatchers("/game/**").hasAnyRole("ADMIN", "USER")
-//        .antMatchers("/hero/edit/**").hasRole("ADMIN")
-//        .and().formLogin()
-//        .defaultSuccessUrl("/")
-//        .and().logout().logoutSuccessUrl("/")
-//        .permitAll();
+
