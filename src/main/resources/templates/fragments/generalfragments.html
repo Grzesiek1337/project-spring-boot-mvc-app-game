@@ -87,43 +87,46 @@
 <nav th:fragment="heroInfoBar">
     <div class="d-flex justify-content-around bg-dark">
         <div class="p-2 d-flex flex-column bg-dark">
-            <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family:Consolas">Level: <a
-                    class="text-white text-decoration-none" th:text="${user.getUserHeroLevel()}"></a></p>
-            <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family: Consolas">Name: <a
-                    class="text-white text-decoration-none" th:text="${user.getUserHeroName()}"></a></p>
-            <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family: Consolas">Attack: <a
-                    class="text-white text-decoration-none" th:text="${user.getUserHeroAttack()}"></a></p>
-            <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family: Consolas">Health: <a
-                    class="text-white text-decoration-none" th:text="${user.getUserHeroHealth()}"></a></p>
-            <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family: Consolas">Experience: <a
-                    class="text-white text-decoration-none" th:text="${user.getUserHeroExperience()}"></a></p>
-            <p class="fw-bold" style="color: yellow; font-size: 20px ; font-family: Consolas">Gold: <a
-                    class="text-white text-decoration-none" th:text="${user.getUserHeroGold()}"></a></p>
+            <a class="text-white text-decoration-none" th:text="${'Level : ' + userHero.level}"></a>
+            <a class="text-white text-decoration-none" th:text="${'Name : ' + userHero.name}"></a>
+            <a class="text-white text-decoration-none"
+               th:text="${'Attack : ' + userHero.minAttack + '-' + userHero.maxAttack}"></a>
+            <a class="text-white text-decoration-none"
+               th:text="${'Health : ' + userHero.health + '/' + userHero.maximumHealth}"></a>
+            <a class="text-white text-decoration-none"
+               th:text="${'Experience : ' + userHero.experience + '/' + userHero.experienceThreshold}"></a>
+            <a class="text-white text-decoration-none" th:text="${'Gold : ' + userHero.gold}"></a>
+            <div>
+                <a class="text-decoration-none fs-bold" style="color: red"
+                   th:text="${'HP Potions : ' + userHero.hpPotions}"></a>
+                <a class="text-decoration-none" style="color: greenyellow" th:href="@{/game/heal_by_potion}">Heal
+                    +20</a>
+            </div>
         </div>
-
-        <div class="p-2 d-flex flex-column bg-dark">
+        <div class="p-2 d-flex bg-dark">
             <table>
                 <thead>
                 <tr>
-                    <th class="fw-bold" style="color: yellow; font-size: 20px ; font-family:Consolas">Inventory:</th>
+                    <th class="fw-bold text-white text-decoration-none">Inventory :</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr th:each="item : ${heroItems}">
-                    <td class="text-white text-decoration-none" th:text="${item.name}"></td>
+                <tbody class="d-flex flex-row">
+                <tr class="d-flex flex-column" th:each="item : ${inventory}">
+                    <td><a class="text-white text-decoration-none" th:text="${' Item : ' + item.name}"></a></td>
+                    <td><a class="text-white text-decoration-none" th:text="${' Attack Boost : ' + item.increaseMinAttack + '-' + item.increaseMaxAttack}"></a></td>
+                    <td><a class="text-white text-decoration-none" th:text="${' Health Boost : ' + item.increaseHealth}"></a></td>
+                    <td><a class="text-white text-decoration-none" th:text="${' Sell price : ' + item.price/2}"></a></td>
+                    <td><a class="text-decoration-none" style="color: yellow" th:href="@{'/game/shop/item_sell/' + ${item.name}}">Sell</a></td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </nav>
-
-
 <footer th:fragment="footer">
     <div class="p-5 bg-dark bg-gradient text-white d-flex justify-content-evenly">
         <a th:text="${'© Copyright -GM 2022'}"></a>
     </div>
 </footer>
-
 </body>
 </html>
