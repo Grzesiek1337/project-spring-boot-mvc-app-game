@@ -1,15 +1,16 @@
 package pl.gm.project.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.gm.project.model.Item;
 import pl.gm.project.repository.ItemRepository;
-
 import java.util.List;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class ItemService {
 
     @Autowired
@@ -27,11 +28,19 @@ public class ItemService {
         return itemRepository.findById(id).get();
     }
 
+    public Item getByName(String name) {
+        return itemRepository.getItemByItemname(name);
+    }
+
     public void update(Item item) {
         itemRepository.save(item);
     }
 
     public void delete(long id) {
         itemRepository.deleteById(id);
+    }
+
+    public void removeItemFromInventory(List<Item> items,String itemName) {
+        items.removeIf(item -> item.getName().equals(itemName));
     }
 }
