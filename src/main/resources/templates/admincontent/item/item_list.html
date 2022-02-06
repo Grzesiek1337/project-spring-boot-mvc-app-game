@@ -10,33 +10,33 @@
 <body>
 <header th:insert="fragments/generalfragments.html :: header"> </header>
 <header th:insert="fragments/generalfragments.html :: loggedNaviBar"> </header>
-<div>
+<div class="bg-dark d-flex justify-content-center">
     <table>
         <thead>
         <tr>
-            <th>Item ID</th>
-            <th>Name</th>
-            <th>IncATK</th>
-            <th>IncHP</th>
-            <th>IncPOW</th>
-            <th>Price</th>
+            <th class="text-white text-decoration-none">Item ID</th>
+            <th class="text-white text-decoration-none">Name</th>
+            <th class="text-white text-decoration-none">IncMinATK</th>
+            <th class="text-white text-decoration-none">IncMaxATK</th>
+            <th class="text-white text-decoration-none">IncHP</th>
+            <th class="text-white text-decoration-none">Price</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="item : ${itemList}">
-            <td th:text="${item.id}">Item ID</td>
-            <td th:text="${item.name}">Item name</td>
-            <td th:text="${item.increaseAttack}">IncATK</td>
-            <td th:text="${item.increaseHealth}">IncHP</td>
-            <td th:text="${item.increasePower}">IncPOW</td>
-            <td th:text="${item.price}">Price</td>
+            <td class="text-white text-decoration-none" th:text="${item.id}">Item ID</td>
+            <td class="text-white text-decoration-none" th:text="${item.name}">Item name</td>
+            <td class="text-white text-decoration-none" th:text="${item.increaseMinAttack}">IncMinATK</td>
+            <td class="text-white text-decoration-none" th:text="${item.increaseMaxAttack}">IncATK</td>
+            <td class="text-white text-decoration-none" th:text="${item.increaseHealth}">IncHP</td>
+            <td class="text-white text-decoration-none" th:text="${item.price}">Price</td>
             <td>
                 <a th:href="@{'/admin/item_remove/' + ${item.id}}">Delete</a>
             </td>
         </tr>
         </tbody>
+        <a class="text-decoration-none" style="color: yellow" th:href="@{'/admin'}">Return</a>
     </table>
-    <a href="/admin">Return</a>
 </div>
 <footer th:replace="fragments/generalfragments.html :: footer"></footer>
 </body>
