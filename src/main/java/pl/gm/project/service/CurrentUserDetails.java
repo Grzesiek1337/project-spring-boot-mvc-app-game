@@ -2,14 +2,11 @@ package pl.gm.project.service;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.gm.project.model.Hero;
 import pl.gm.project.model.User;
-
 
 public class CurrentUserDetails implements UserDetails {
 
@@ -39,20 +36,27 @@ public class CurrentUserDetails implements UserDetails {
         return user.getUsername();
     }
 
-    public Optional<Hero> getUserHero() {
-        return Optional.ofNullable(user.getHero());
+    public Hero getUserHero() {return user.getHero();
     }
 
     public String getUserHeroName() {
         return user.getHero().getName();
     }
 
-    public Integer getUserHeroAttack() {
-        return user.getHero().getAttack();
+    public Integer getUserMinAttack() {
+        return user.getHero().getMinAttack();
+    }
+
+    public Integer getUserMaxAttack() {
+        return user.getHero().getMaxAttack();
     }
 
     public Integer getUserHeroHealth() {
         return user.getHero().getHealth();
+    }
+
+    public Integer getUserHeroMaximumHealth() {
+        return user.getHero().getMaximumHealth();
     }
 
     public Integer getUserHeroLevel() {
@@ -67,6 +71,12 @@ public class CurrentUserDetails implements UserDetails {
         return user.getHero().getGold();
     }
 
+    public Integer getUserHeroHpPotions() {
+        return user.getHero().getHpPotions();
+    }
+    public Integer getUserHeroExpThreshold() {
+        return user.getHero().getExperienceThreshold();
+    }
 
     @Override
     public boolean isAccountNonExpired() {
