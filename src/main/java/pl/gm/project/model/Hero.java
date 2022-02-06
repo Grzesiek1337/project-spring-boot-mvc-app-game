@@ -3,8 +3,7 @@ package pl.gm.project.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -12,32 +11,29 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Hero {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private int attack;
+    private int minAttack;
+    private int maxAttack;
     private int health;
+    private int maximumHealth;
     private int level;
     private int experience;
+    private int experienceThreshold;
     private int gold;
+    private int hpPotions;
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "hero_items", joinColumns = @JoinColumn(name = "hero_id"),
-            inverseJoinColumns = @JoinColumn(name = "items_id"))
+    @JoinTable(name = "heroes_items", joinColumns = @JoinColumn(name = "hero_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id"))
     private List<Item> items = new ArrayList<>();
 
-    public String getUserName() {
-        if (this.user == null) {
-            return "no user";
-        } else {
-            return this.user.getUsername();
-        }
-    }
+
 }
