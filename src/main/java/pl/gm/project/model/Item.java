@@ -20,11 +20,12 @@ public class Item {
 
     private String name;
 
-    private int increaseAttack;
+    private int increaseMinAttack;
+
+    private int increaseMaxAttack;
 
     private int increaseHealth;
 
-    private int increasePower;
 
     private int price;
 }
