@@ -1,7 +1,6 @@
 package pl.gm.project.model;
 
 import lombok.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -12,7 +11,6 @@ import javax.validation.constraints.Size;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class User {
 
     @Id
@@ -32,12 +30,14 @@ public class User {
 
     private boolean enabled;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = { CascadeType.REMOVE, CascadeType.MERGE })
     @JoinColumn(name = "hero_id")
     private Hero hero;
 
-
-    public Hero getHero() {
-        return this.hero;
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                '}';
     }
 }
