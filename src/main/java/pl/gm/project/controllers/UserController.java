@@ -1,6 +1,7 @@
 package pl.gm.project.controllers;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,35 +20,34 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/user")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-    private HeroService heroService;
-    private UserRepository userRepository;
+    private final UserService userService;
+    private final HeroService heroService;
+    private final UserRepository userRepository;
 
-    @GetMapping("/user_create")
+    @GetMapping("/create")
     public String showNewUserCreatePageForUser(Model model) {
         model.addAttribute("user", new User());
-        return "usercontent/user/user_create";
+        return "user-content/user/create";
     }
 
     @PostMapping("/user_create")
     public String saveUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "usercontent/user/user_create";
+            return "user-content/user/create";
         }
         if (userRepository.getUserByUsername(user.getUsername()) != null) {
             model.addAttribute("msg", "User already exists.");
-            return "usercontent/user/user_create";
+            return "user-content/user/create";
         }
         model.addAttribute("successCreatingAccountMsg", "U have successfully created your account! Log and play!");
         userService.saveNewUser(user);
         return "index";
     }
 
-    @PostMapping("/hero_create")
+    @PostMapping("/hero/create")
     public String saveHeroForUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails,Hero hero) {
         heroService.createHeroForUser(currentUserDetails,hero);
         return "redirect:/game";

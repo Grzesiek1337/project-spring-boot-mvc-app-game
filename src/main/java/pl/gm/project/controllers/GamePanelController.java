@@ -1,6 +1,8 @@
 package pl.gm.project.controllers;
 
+import java.security.SecureRandom;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -17,14 +19,13 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/game")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GamePanelController {
 
-    @Autowired
-    private HeroService heroService;
-    private ItemService itemService;
-    private UserService userService;
-    private MobService mobService;
+    private final HeroService heroService;
+    private final ItemService itemService;
+    private final UserService userService;
+    private final MobService mobService;
 
     @ModelAttribute("user")
     public CurrentUserDetails getUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
@@ -42,7 +43,7 @@ public class GamePanelController {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         if (currentUserDetails.getUserHero() == null) {
             model.addAttribute("hero", new Hero());
-            return "usercontent/hero/hero_create";
+            return "user-content/hero/create";
         }
         model.addAttribute("inventory", hero.getItems());
         model.addAttribute("user", user);
@@ -55,7 +56,7 @@ public class GamePanelController {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         if (hero == null) {
             model.addAttribute("hero", new Hero());
-            return "usercontent/hero/hero_create";
+            return "user-content/hero/create";
         }
         model.addAttribute("inventory", hero.getItems());
         model.addAttribute("userHero", hero);
@@ -95,7 +96,7 @@ public class GamePanelController {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         if (hero == null) {
             model.addAttribute("hero", new Hero());
-            return "usercontent/hero/hero_create";
+            return "user-content/hero/create";
         }
         model.addAttribute("inventory", hero.getItems());
         model.addAttribute("mobs", mobService.listAll());
@@ -191,7 +192,7 @@ public class GamePanelController {
             model.addAttribute("successBuy", "You have bought item successfully.");
             return "gamepanel";
         } else {
-            model.addAttribute("goldAmountNotEnought", "Not enought gold.");
+            model.addAttribute("goldAmountNotEnough", "Not enough gold.");
             model.addAttribute("userHero", hero);
             model.addAttribute("inventory", hero.getItems());
             model.addAttribute("shopItems", itemService.listAll());
@@ -223,7 +224,7 @@ public class GamePanelController {
             heroService.update(hero);
             return "shoppanel";
         } else {
-            model.addAttribute("goldAmountNotEnought", "Not enought gold.");
+            model.addAttribute("goldAmountNotEnough", "Not enough gold.");
             model.addAttribute("userHero", hero);
             model.addAttribute("inventory", hero.getItems());
             model.addAttribute("shopItems", itemService.listAll());
