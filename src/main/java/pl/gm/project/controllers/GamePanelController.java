@@ -62,6 +62,43 @@ public class GamePanelController {
         return "templepanel";
     }
 
+    @GetMapping("/temple/raise_random_stat")
+    public String raiseRandomStat(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
+        Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
+        if (hero.getGold() >= 500) {
+            Random random = new Random();
+            int rndNumber = random.nextInt(1, 4);
+            if (rndNumber == 1) {
+                model.addAttribute("userHero", hero);
+                model.addAttribute("inventory", hero.getItems());
+                model.addAttribute("raiseStatMessage", "You feel stronger now! Your health is up!");
+                heroService.raiseHealthBySacrificingGold(hero, 50);
+            }
+            if (rndNumber == 2) {
+                model.addAttribute("userHero", hero);
+                model.addAttribute("inventory", hero.getItems());
+                model.addAttribute("raiseStatMessage", "You feel stronger now! Your attack is up!");
+                heroService.raiseAttackBySacrificingGold(hero,2,4);
+            }
+            if (rndNumber == 3) {
+                model.addAttribute("userHero", hero);
+                model.addAttribute("inventory", hero.getItems());
+                model.addAttribute("raiseStatMessage", "You feel more experienced");
+                heroService.raiseExperienceBySacrificingGold(hero,500);
+            }
+        } else {
+            model.addAttribute("goldAmountNotEnought", "Not enought gold.");
+            model.addAttribute("userHero", hero);
+            model.addAttribute("inventory", hero.getItems());
+        }
+        if(hero.getExperience() >= hero.getExperienceThreshold()) {
+            heroService.levelUp(hero);
+            model.addAttribute("levelUp", "Your level is up!!");
+            return "gamepanel";
+        }
+        return "templepanel";
+    }
+
     @GetMapping("/heal_by_potion")
     public String healHeroByPotion(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
