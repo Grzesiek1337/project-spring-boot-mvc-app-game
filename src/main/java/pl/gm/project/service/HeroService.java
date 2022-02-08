@@ -82,13 +82,31 @@ public class HeroService {
     }
 
     public void levelUp(Hero hero) {
+        int experienceDifference = hero.getExperience() - hero.getExperienceThreshold();
         hero.setLevel(hero.getLevel() + 1);
         hero.setMinAttack(hero.getMinAttack() + 1);
         hero.setMaxAttack(hero.getMaxAttack() + 2);
         hero.setMaximumHealth(hero.getMaximumHealth() + 20);
         hero.setHealth(hero.getMaximumHealth());
-        hero.setExperience(0);
+        hero.setExperience(experienceDifference);
         hero.setExperienceThreshold(hero.getExperienceThreshold() + 50);
         heroRepository.save(hero);
+    }
+
+    public void raiseHealthBySacrificingGold(Hero hero , int raiseValue) {
+        hero.setGold(hero.getGold() - 500);
+        hero.setMaximumHealth(hero.getMaximumHealth() + raiseValue);
+        hero.setHealth(hero.getHealth() + raiseValue);
+    }
+
+    public void raiseAttackBySacrificingGold(Hero hero , int minAttackRaiseValue,int maxAttackRaiseValue) {
+        hero.setGold(hero.getGold() - 500);
+        hero.setMinAttack(hero.getMinAttack() + minAttackRaiseValue);
+        hero.setMaxAttack(hero.getMaxAttack() + maxAttackRaiseValue);
+    }
+
+    public void raiseExperienceBySacrificingGold(Hero hero , int experienceValue) {
+        hero.setGold(hero.getGold() - 500);
+        hero.setExperience(hero.getExperience() + experienceValue);
     }
 }
