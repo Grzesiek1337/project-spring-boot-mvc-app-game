@@ -1,6 +1,8 @@
 package pl.gm.project.controllers;
 
+import java.security.SecureRandom;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -17,14 +19,13 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/game")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GamePanelController {
 
-    @Autowired
-    private HeroService heroService;
-    private ItemService itemService;
-    private UserService userService;
-    private MobService mobService;
+    private final HeroService heroService;
+    private final ItemService itemService;
+    private final UserService userService;
+    private final MobService mobService;
 
     @ModelAttribute("user")
     public CurrentUserDetails getUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
@@ -39,10 +40,11 @@ public class GamePanelController {
     @GetMapping()
     public String gamePanel(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         User user = userService.get(currentUserDetails.getUser().getId());
+
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         if (currentUserDetails.getUserHero() == null) {
             model.addAttribute("hero", new Hero());
-            return "usercontent/hero/hero_create";
+            return "user-content/hero/create";
         }
         model.addAttribute("inventory", hero.getItems());
         model.addAttribute("user", user);
@@ -55,18 +57,19 @@ public class GamePanelController {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         if (hero == null) {
             model.addAttribute("hero", new Hero());
-            return "usercontent/hero/hero_create";
+            return "user-content/hero/create";
         }
         model.addAttribute("inventory", hero.getItems());
         model.addAttribute("userHero", hero);
+        // Should be temple-panel or templePanel. Same game-panel/gamePnel etc.
         return "templepanel";
     }
 
-    @GetMapping("/heal_by_potion")
+    @GetMapping("/user/heal/potion")
     public String healHeroByPotion(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         if (hero.getHpPotions() <= 0) {
-            model.addAttribute("notEnoughtPotions", "U dont have any potion.");
+            model.addAttribute("notEnoughPotions", "U dont have any potion.");
             model.addAttribute("inventory", hero.getItems());
             model.addAttribute("userHero", hero);
             return "gamepanel";
@@ -95,7 +98,7 @@ public class GamePanelController {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         if (hero == null) {
             model.addAttribute("hero", new Hero());
-            return "usercontent/hero/hero_create";
+            return "user-content/hero/create";
         }
         model.addAttribute("inventory", hero.getItems());
         model.addAttribute("mobs", mobService.listAll());
@@ -169,7 +172,7 @@ public class GamePanelController {
         return "shoppanel";
     }
 
-    @GetMapping("/shop/item_buy/{id}")
+    @GetMapping("/shop/buy-item/{id}")
     public String buyItemFromShop(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model, @PathVariable long id) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         List<Item> items = hero.getItems();
@@ -191,7 +194,7 @@ public class GamePanelController {
             model.addAttribute("successBuy", "You have bought item successfully.");
             return "gamepanel";
         } else {
-            model.addAttribute("goldAmountNotEnought", "Not enought gold.");
+            model.addAttribute("goldAmountNotEnough", "Not enough gold.");
             model.addAttribute("userHero", hero);
             model.addAttribute("inventory", hero.getItems());
             model.addAttribute("shopItems", itemService.listAll());
@@ -199,7 +202,7 @@ public class GamePanelController {
         }
     }
 
-    @GetMapping("/shop/item_sell/{name}")
+    @GetMapping("/shop/sell-item/{name}")
     public String sellItemFromInventory(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, @PathVariable String name, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         itemService.removeItemFromInventory(hero.getItems(), name);
@@ -211,7 +214,7 @@ public class GamePanelController {
         return "gamepanel";
     }
 
-    @GetMapping("/shop/hp_potion_buy")
+    @GetMapping("/shop/buy/hp_potion")
     public String buyHpPotion(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         if (hero.getGold() >= 20) {
@@ -223,7 +226,7 @@ public class GamePanelController {
             heroService.update(hero);
             return "shoppanel";
         } else {
-            model.addAttribute("goldAmountNotEnought", "Not enought gold.");
+            model.addAttribute("goldAmountNotEnough", "Not enough gold.");
             model.addAttribute("userHero", hero);
             model.addAttribute("inventory", hero.getItems());
             model.addAttribute("shopItems", itemService.listAll());
