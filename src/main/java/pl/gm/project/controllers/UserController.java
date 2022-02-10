@@ -1,7 +1,6 @@
 package pl.gm.project.controllers;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +18,12 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/user")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-    private HeroService heroService;
-    private UserRepository userRepository;
+    private final UserService userService;
+    private final HeroService heroService;
+    private final UserRepository userRepository;
 
     @GetMapping("/user_create")
     public String showNewUserCreatePageForUser(Model model) {
@@ -39,7 +37,7 @@ public class UserController {
             return "usercontent/user/user_create";
         }
         if (userRepository.getUserByUsername(user.getUsername()) != null) {
-            model.addAttribute("msg", "User already exists.");
+            model.addAttribute("msg", "User already exist.");
             return "usercontent/user/user_create";
         }
         model.addAttribute("successCreatingAccountMsg", "U have successfully created your account! Log and play!");
