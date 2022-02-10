@@ -1,7 +1,6 @@
 package pl.gm.project.controllers;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,18 +16,36 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/game")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GamePanelController {
 
-    @Autowired
-    private HeroService heroService;
-    private ItemService itemService;
-    private UserService userService;
-    private MobService mobService;
+    private final HeroService heroService;
+    private final ItemService itemService;
+    private final UserService userService;
+    private final MobService mobService;
 
     @ModelAttribute("user")
     public CurrentUserDetails getUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
         return currentUserDetails;
+    }
+
+    @ModelAttribute("userHero")
+    public Hero getUserHero(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
+        return userService.get(currentUserDetails.getUser().getId()).getHero();
+    }
+
+    @ModelAttribute("inventory")
+    public List<Item> getHeroItems(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
+        if (userService.get(currentUserDetails.getUser().getId()).getHero() == null) {
+            return new ArrayList<>();
+        } else {
+            return userService.get(currentUserDetails.getUser().getId()).getHero().getItems();
+        }
+    }
+
+    @ModelAttribute("shopItems")
+    public List<Item> getShopItems() {
+        return itemService.listAll();
     }
 
     @ModelAttribute("localDateTime")
@@ -40,103 +57,54 @@ public class GamePanelController {
     public String gamePanel(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         User user = userService.get(currentUserDetails.getUser().getId());
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
-        if (currentUserDetails.getUserHero() == null) {
+        if (!heroService.isUserHaveHero(hero)) {
             model.addAttribute("hero", new Hero());
             return "usercontent/hero/hero_create";
         }
-        model.addAttribute("inventory", hero.getItems());
-        model.addAttribute("user", user);
-        model.addAttribute("userHero", hero);
         return "gamepanel";
     }
 
     @GetMapping("/temple")
     public String getTemplePanel(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
-        if (hero == null) {
+        if (!heroService.isUserHaveHero(hero)) {
             model.addAttribute("hero", new Hero());
             return "usercontent/hero/hero_create";
         }
-        model.addAttribute("inventory", hero.getItems());
-        model.addAttribute("userHero", hero);
         return "templepanel";
     }
 
     @GetMapping("/temple/raise_random_stat")
     public String raiseRandomStat(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
-        if (hero.getGold() >= 500) {
-            Random random = new Random();
-            int rndNumber = random.nextInt(1, 4);
-            if (rndNumber == 1) {
-                model.addAttribute("userHero", hero);
-                model.addAttribute("inventory", hero.getItems());
-                model.addAttribute("raiseStatMessage", "You feel stronger now! Your health is up!");
-                heroService.raiseHealthBySacrificingGold(hero, 50);
-            }
-            if (rndNumber == 2) {
-                model.addAttribute("userHero", hero);
-                model.addAttribute("inventory", hero.getItems());
-                model.addAttribute("raiseStatMessage", "You feel stronger now! Your attack is up!");
-                heroService.raiseAttackBySacrificingGold(hero,2,4);
-            }
-            if (rndNumber == 3) {
-                model.addAttribute("userHero", hero);
-                model.addAttribute("inventory", hero.getItems());
-                model.addAttribute("raiseStatMessage", "You feel more experienced");
-                heroService.raiseExperienceBySacrificingGold(hero,500);
-            }
-        } else {
-            model.addAttribute("goldAmountNotEnought", "Not enought gold.");
-            model.addAttribute("userHero", hero);
-            model.addAttribute("inventory", hero.getItems());
-        }
-        if(hero.getExperience() >= hero.getExperienceThreshold()) {
-            heroService.levelUp(hero);
-            model.addAttribute("levelUp", "Your level is up!!");
-            return "gamepanel";
+        heroService.ifPossibleToRaiseStatictic(hero);
+        heroService.levelUpifPossible(hero);
+        if (!heroService.ifPossibleToRaiseStatictic(hero)) {
+            model.addAttribute("goldAmountNotEnought", "Not enough gold.");
         }
         return "templepanel";
     }
 
-    @GetMapping("/heal_by_potion")
+    @GetMapping("/heal")
     public String healHeroByPotion(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
-        if (hero.getHpPotions() <= 0) {
-            model.addAttribute("notEnoughtPotions", "U dont have any potion.");
-            model.addAttribute("inventory", hero.getItems());
-            model.addAttribute("userHero", hero);
-            return "gamepanel";
-        }
-        if (hero.getHealth() == hero.getMaximumHealth()) {
-            model.addAttribute("fullHealth", "Maximum health already.");
-            model.addAttribute("inventory", hero.getItems());
-            model.addAttribute("userHero", hero);
-            return "gamepanel";
+        if (hero.getHealth() == hero.getMaximumHealth() || hero.getHpPotions() <= 0) {
+            model.addAttribute("fullHealthOrNotEnoughPotions", "You have full health or 0 health potions.");
         } else {
-            hero.setHealth(hero.getHealth() + 25);
-            hero.setHpPotions(hero.getHpPotions() - 1);
-            heroService.update(hero);
+            heroService.healByPotion(hero);
+            return "gamepanel";
         }
-        if (hero.getHealth() > hero.getMaximumHealth()) {
-            hero.setHealth(hero.getMaximumHealth());
-        }
-        model.addAttribute("inventory", hero.getItems());
-        model.addAttribute("userHero", hero);
-        heroService.update(hero);
         return "gamepanel";
     }
 
     @GetMapping("/arena")
     public String getArenaPanel(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
-        if (hero == null) {
+        if (!heroService.isUserHaveHero(hero)) {
             model.addAttribute("hero", new Hero());
             return "usercontent/hero/hero_create";
         }
-        model.addAttribute("inventory", hero.getItems());
         model.addAttribute("mobs", mobService.listAll());
-        model.addAttribute("userHero", hero);
         return "arenapanel";
     }
 
@@ -145,7 +113,6 @@ public class GamePanelController {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         Mob mob = mobService.get(id);
         model.addAttribute("mob", mob);
-        model.addAttribute("userHero", hero);
         return "fightpanel";
     }
 
@@ -180,10 +147,7 @@ public class GamePanelController {
             hero.setGold(hero.getGold() + earnedGold);
             hero.setExperience(hero.getExperience() + earnedExperience);
             heroService.update(hero);
-            if (hero.getExperience() >= hero.getExperienceThreshold()) {
-                heroService.levelUp(hero);
-                model.addAttribute("levelUp", "Your level is up!!");
-            }
+            heroService.levelUpifPossible(hero);
             model.addAttribute("successWonFightMsg", "You have won the fight!");
             model.addAttribute("earnedGold", "You have earned " + earnedGold + " gold.");
             model.addAttribute("earnedExperience", "You have earned " + earnedExperience + " experience.");
@@ -196,13 +160,11 @@ public class GamePanelController {
     @GetMapping("/shop")
     public String getShopPanel(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
-        if (hero == null) {
+        if (!heroService.isUserHaveHero(hero)) {
             model.addAttribute("hero", new Hero());
             return "usercontent/hero/hero_create";
         }
         model.addAttribute("shopItems", itemService.listAll());
-        model.addAttribute("inventory", hero.getItems());
-        model.addAttribute("userHero", hero);
         return "shoppanel";
     }
 
@@ -213,25 +175,17 @@ public class GamePanelController {
         Item itemToBuy = itemService.get(id);
         for (Item item : hero.getItems()) {
             if (item.getName().equals(itemToBuy.getName())) {
-                model.addAttribute("inventory", hero.getItems());
-                model.addAttribute("shopItems", itemService.listAll());
                 model.addAttribute("haveItemAlready", "You already have this item.");
-                model.addAttribute("userHero", hero);
                 return "shoppanel";
             }
         }
         if (hero.getGold() >= itemToBuy.getPrice()) {
             items.add(itemToBuy);
             heroService.buyItemAndUpdate(hero, itemToBuy);
-            model.addAttribute("userHero", hero);
-            model.addAttribute("inventory", hero.getItems());
             model.addAttribute("successBuy", "You have bought item successfully.");
             return "gamepanel";
         } else {
-            model.addAttribute("goldAmountNotEnought", "Not enought gold.");
-            model.addAttribute("userHero", hero);
-            model.addAttribute("inventory", hero.getItems());
-            model.addAttribute("shopItems", itemService.listAll());
+            model.addAttribute("goldAmountNotEnought", "Not enough gold.");
             return "shoppanel";
         }
     }
@@ -241,9 +195,6 @@ public class GamePanelController {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         itemService.removeItemFromInventory(hero.getItems(), name);
         heroService.sellItemAndUpdate(hero, itemService.getByName(name));
-        model.addAttribute("shopItems", itemService.listAll());
-        model.addAttribute("userHero", hero);
-        model.addAttribute("inventory", hero.getItems());
         model.addAttribute("successSell", "You have sold an item.");
         return "gamepanel";
     }
@@ -252,18 +203,10 @@ public class GamePanelController {
     public String buyHpPotion(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         if (hero.getGold() >= 20) {
-            hero.setHpPotions(hero.getHpPotions() + 1);
-            hero.setGold(hero.getGold() - 20);
-            model.addAttribute("shopItems", itemService.listAll());
-            model.addAttribute("userHero", hero);
-            model.addAttribute("inventory", hero.getItems());
-            heroService.update(hero);
+            heroService.addHpPotion(hero);
             return "shoppanel";
         } else {
-            model.addAttribute("goldAmountNotEnought", "Not enought gold.");
-            model.addAttribute("userHero", hero);
-            model.addAttribute("inventory", hero.getItems());
-            model.addAttribute("shopItems", itemService.listAll());
+            model.addAttribute("goldAmountNotEnought", "Not enough gold.");
             return "shoppanel";
         }
     }
