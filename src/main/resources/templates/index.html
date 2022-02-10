@@ -11,14 +11,9 @@
 <body>
 <header th:insert="fragments/generalfragments.html :: header"> </header>
 <header th:insert="fragments/generalfragments.html :: indexNaviBar"> </header>
-<a th:text="${successCreatingAccountMsg}"></a>
-
-
-
-
-
-
-
+<div class="bg-dark d-flex justify-content-center">
+<a th:text="${successCreatingAccountMsg}" style="color: yellow"></a>
+</div>
 <footer th:replace="fragments/generalfragments.html :: footer"></footer>
 
 </body>
