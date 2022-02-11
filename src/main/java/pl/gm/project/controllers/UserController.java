@@ -33,16 +33,7 @@ public class UserController {
 
     @PostMapping("/user_create")
     public String saveUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "usercontent/user/user_create";
-        }
-        if (userRepository.getUserByUsername(user.getUsername()) != null) {
-            model.addAttribute("msg", "User already exist.");
-            return "usercontent/user/user_create";
-        }
-        model.addAttribute("successCreatingAccountMsg", "U have successfully created your account! Log and play!");
-        userService.saveNewUser(user);
-        return "index";
+        return userService.checkAndSaveUser(user,bindingResult,model);
     }
 
     @PostMapping("/hero_create")
