@@ -1,10 +1,10 @@
 package pl.gm.project.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import pl.gm.project.model.Hero;
 import pl.gm.project.model.Item;
 import pl.gm.project.repository.HeroRepository;
@@ -16,12 +16,12 @@ import java.util.Random;
 
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class HeroService {
 
-    @Autowired
-    private HeroRepository heroRepository;
-    private UserRepository userRepository;
+
+    private final HeroRepository heroRepository;
+    private final UserRepository userRepository;
 
     public List<Hero> listAll() {
         return heroRepository.findAll();
@@ -82,6 +82,16 @@ public class HeroService {
         heroRepository.save(hero);
     }
 
+    public String buyHpPotion(Hero hero, Model model) {
+        if (hero.getGold() >= 20) {
+            addHpPotion(hero);
+            return "shoppanel";
+        } else {
+            model.addAttribute("goldAmountNotEnought", "Not enough gold.");
+            return "shoppanel";
+        }
+    }
+
     public void levelUpifPossible(Hero hero) {
         while (hero.getExperience() >= hero.getExperienceThreshold()) {
             levelUp(hero);
@@ -123,6 +133,10 @@ public class HeroService {
         hero.setExperienceThreshold(hero.getExperienceThreshold() + 50);
     }
 
+    public void regenerateAfterDeath(Hero hero) {
+        hero.setHealth(15);
+    }
+
     public void healByPotion(Hero hero) {
         hero.setHealth(hero.getHealth() + 25);
         hero.setHpPotions(hero.getHpPotions() - 1);
@@ -131,7 +145,7 @@ public class HeroService {
         }
     }
 
-    public void addHpPotion(Hero hero) {
+    public static void addHpPotion(Hero hero) {
         hero.setHpPotions(hero.getHpPotions() + 1);
         hero.setGold(hero.getGold() - 20);
     }
