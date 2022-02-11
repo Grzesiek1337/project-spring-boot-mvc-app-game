@@ -23,6 +23,7 @@ public class GamePanelController {
     private final ItemService itemService;
     private final UserService userService;
     private final MobService mobService;
+    private final FightService fightService;
 
     @ModelAttribute("user")
     public CurrentUserDetails getUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
@@ -118,43 +119,10 @@ public class GamePanelController {
 
     @GetMapping("/arena/attack/{mobName}/{minAttack}/{maxAttack}/{health}/{level}")
     public String attackMob(@PathVariable String mobName, @PathVariable int minAttack, @PathVariable int maxAttack, @PathVariable int health, @PathVariable int level, @AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
-        Random random = new Random();
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         Mob mob = new Mob(null, mobName, minAttack, maxAttack, health, level);
-        int heroAttack = random.nextInt(hero.getMinAttack(), hero.getMaxAttack() + 1);
-        int mobAttack = random.nextInt(mob.getMinAttack(), mob.getMaxAttack() + 1);
-        mob.setHealth(mob.getHealth() - heroAttack);
-        hero.setHealth(hero.getHealth() - mobAttack);
-        heroService.update(hero);
-        if (hero.getHealth() <= 0) {
-            model.addAttribute("failedWonFight", "You have lost this fight.Your health have been little regenerated.");
-            model.addAttribute("userHero", hero);
-            model.addAttribute("inventory", hero.getItems());
-            hero.setHealth(15);
-            heroService.update(hero);
-            return "gamepanel";
-        }
-        if (mob.getHealth() > 0) {
-            model.addAttribute("hitMobMsg", "You have attacked " + mob.getName() + " for " + heroAttack + " damege.");
-            model.addAttribute("hitHeroMsg", "You have taken  " + mobAttack + " damage from " + mob.getName());
-            model.addAttribute("mob", mob);
-            model.addAttribute("userHero", hero);
-            model.addAttribute("inventory", hero.getItems());
-            return "fightpanel";
-        } else {
-            int earnedGold = random.nextInt(mob.getLevel() * 10, mob.getLevel() * 20);
-            int earnedExperience = random.nextInt(mob.getLevel() * 20, mob.getLevel() * 40);
-            hero.setGold(hero.getGold() + earnedGold);
-            hero.setExperience(hero.getExperience() + earnedExperience);
-            heroService.update(hero);
-            heroService.levelUpifPossible(hero);
-            model.addAttribute("successWonFightMsg", "You have won the fight!");
-            model.addAttribute("earnedGold", "You have earned " + earnedGold + " gold.");
-            model.addAttribute("earnedExperience", "You have earned " + earnedExperience + " experience.");
-            model.addAttribute("userHero", hero);
-            model.addAttribute("inventory", hero.getItems());
-            return "gamepanel";
-        }
+        return fightService.oneTurnHeroVsMob(hero,mob,model);
+
     }
 
     @GetMapping("/shop")
@@ -202,12 +170,6 @@ public class GamePanelController {
     @GetMapping("/shop/hp_potion_buy")
     public String buyHpPotion(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
-        if (hero.getGold() >= 20) {
-            heroService.addHpPotion(hero);
-            return "shoppanel";
-        } else {
-            model.addAttribute("goldAmountNotEnought", "Not enough gold.");
-            return "shoppanel";
-        }
+        return heroService.buyHpPotion(hero,model);
     }
 }
