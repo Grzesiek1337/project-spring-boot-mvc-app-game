@@ -1,7 +1,6 @@
 package pl.gm.project.controllers.admincontrollers;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +15,14 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdminPanelController {
 
-    @Autowired
-    private HeroService heroService;
-    private UserService userService;
-    private ItemService itemService;
-    private MobService mobService;
+
+    private final HeroService heroService;
+    private final UserService userService;
+    private final ItemService itemService;
+    private final MobService mobService;
 
     @ModelAttribute("user")
     public CurrentUserDetails getUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
@@ -34,7 +33,6 @@ public class AdminPanelController {
     public LocalDateTime getUser() {
         return LocalDateTime.now();
     }
-
 
     @GetMapping()
     public String adminPanel(Model model) {
