@@ -1,7 +1,6 @@
 package pl.gm.project.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.gm.project.model.Mob;
@@ -11,11 +10,11 @@ import java.util.List;
 
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MobService {
 
-    @Autowired
-    private MobRepository mobRepository;
+
+    private final MobRepository mobRepository;
 
     public List<Mob> listAll() {
         return mobRepository.findAll();
