@@ -25,6 +25,7 @@
         <a class="text-decoration-none btn btn-outline-warning" th:href="@{'/game/arena/attack/' + ${mob.name} + '/' + ${mob.minAttack} + '/' + ${mob.maxAttack} + '/' + ${mob.health} + '/' + ${mob.level}}">Attack!</a>
         <a class="text-decoration-none" style="color: green" th:text="${hitMobMsg}"></a>
         <a class="text-decoration-none" style="color: red" th:text="${hitHeroMsg}"></a>
+        <a class="text-decoration-none" style="color: red" th:text="${dodgeMessage}"></a>
     </div>
     <div class="d-flex flex-column">
         <a class="text-white text-decoration-none" th:text="${'Mob :' + mob.name}"></a>
