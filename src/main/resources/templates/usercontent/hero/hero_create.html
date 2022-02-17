@@ -11,7 +11,7 @@
 <header th:insert="fragments/generalfragments.html :: header"></header>
 <header th:insert="fragments/generalfragments.html :: loggedNaviBar"></header>
 <div class="bg-dark d-flex justify-content-center">
-    <form action="#" th:action="@{/user/hero_create}" th:object="${hero}"
+    <form action="#" th:action="@{/user/hero/create}" th:object="${hero}"
           method="post">
         <table>
             <a class="text-white text-decoration-none"

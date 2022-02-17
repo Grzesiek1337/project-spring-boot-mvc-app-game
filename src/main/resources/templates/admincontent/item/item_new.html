@@ -11,7 +11,7 @@
 <header th:insert="fragments/generalfragments.html :: header"> </header>
 <header th:insert="fragments/generalfragments.html :: loggedNaviBar"> </header>
 <div class="bg-dark d-flex justify-content-center">
-    <form action="#" th:action="@{/admin/item_new}" th:object="${item}"
+    <form action="#" th:action="@{/admin/item/new}" th:object="${item}"
           method="post">
         <table class="d-flex flex-column">
             <tr>
