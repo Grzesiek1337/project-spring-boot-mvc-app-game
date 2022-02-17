@@ -17,15 +17,9 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
     private int increaseMinAttack;
-
     private int increaseMaxAttack;
-
     private int increaseHealth;
-
-
     private int price;
 }
