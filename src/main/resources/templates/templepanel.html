@@ -16,11 +16,38 @@
 <header th:insert="fragments/generalfragments.html :: heroInfoBar"></header>
 <div class="bg-dark d-flex justify-content-center">
     <div class="d-flex flex-column">
-        <a class="text-decoration-none" style="color: deepskyblue"
-           th:text="'Sacrifice gold and receive a random stat with a random value or large amount of experience.'"></a>
-        <a class="text-decoration-none" style="color: yellow" th:href="@{'/game/temple/raise_random_stat'}">Sacrifice 500 gold.</a>
-        <a class="text-decoration-none" style="color: red" th:text="${goldAmountNotEnought}"></a>
-        <a class="text-decoration-none" style="color: lawngreen" th:text="${raiseStatMessage}"></a>
+        <a class="text-white text-decoration-none" th:text="${haveQuestAlready}"></a>
+        <div>
+            <table>
+                <thead>
+                <tr>
+                    <th class="text-white text-decoration-none">Quest</th>
+                    <th class="text-white text-decoration-none">Gold</th>
+                    <th class="text-white text-decoration-none">Experience</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="quest : ${quests}">
+                    <td class="text-white text-decoration-none" th:text="${quest.description}"></td>
+                    <td class="text-white text-decoration-none" th:text="${quest.goldPrize}">Price</td>
+                    <td class="text-white text-decoration-none" th:text="${quest.experiencePrize}"></td>
+                    <td class="text-white text-decoration-none" th:text="${haveQuestAlready}"></td>
+                    <td>
+                        <a class="text-decoration-none" style="color: yellow"
+                           th:href="@{'/game/quest/take/' + ${quest.id}}">Take Quest!</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex flex-column">
+            <a class="text-decoration-none" style="color: deepskyblue"
+               th:text="'Sacrifice gold and receive a random stat with a random value or large amount of experience.'"></a>
+            <a class="text-decoration-none" style="color: yellow" th:href="@{'/game/temple/raise_random_stat'}">Sacrifice
+                500 gold.</a>
+            <a class="text-decoration-none" style="color: red" th:text="${goldAmountNotEnought}"></a>
+            <a class="text-decoration-none" style="color: lawngreen" th:text="${raiseStatMessage}"></a>
+        </div>
     </div>
 </div>
 <footer th:replace="fragments/generalfragments.html :: footer"></footer>
