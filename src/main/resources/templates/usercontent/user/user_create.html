@@ -12,7 +12,7 @@
 <header th:insert="fragments/generalfragments.html :: indexNaviBar"> </header>
 <div class="bg-dark d-flex justify-content-center">
 
-    <form class="d-flex flex-column" action="#" th:action="@{/user/user_create}" th:object="${user}"
+    <form class="d-flex flex-column" action="#" th:action="@{/user/create}" th:object="${user}"
           method="post">
         <a class="text-white text-decoration-none" th:text="${msg}"></a>
         <table>
@@ -22,12 +22,12 @@
             <tr>
                 <td class="text-white text-decoration-none">User Name:</td>
                 <td><input type="text" th:field="*{username}" /></td>
-                <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></td>
+                <td class="text-white text-decoration-none" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></td>
             </tr>
             <tr>
                 <td class="text-white text-decoration-none">Password:</td>
                 <td><input type="text" th:field="*{password}" /></td>
-                <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></td>
+                <td class="text-white text-decoration-none" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></td>
             </tr>
             <tr>
 
