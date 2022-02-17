@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import pl.gm.project.model.Hero;
 import pl.gm.project.model.Item;
+import pl.gm.project.model.Quest;
 import pl.gm.project.repository.HeroRepository;
 import pl.gm.project.repository.UserRepository;
 
@@ -51,6 +52,7 @@ public class HeroService {
         heroForUser.setHealth(100);
         heroForUser.setMaximumHealth(100);
         heroForUser.setLevel(1);
+        heroForUser.setDodgeChance(5);
         heroForUser.setExperience(0);
         heroForUser.setExperienceThreshold(100);
         heroForUser.setGold(100);
@@ -87,7 +89,7 @@ public class HeroService {
             addHpPotion(hero);
             return "shoppanel";
         } else {
-            model.addAttribute("goldAmountNotEnought", "Not enough gold.");
+            model.addAttribute("goldAmountNotEnough", "Not enough gold.");
             return "shoppanel";
         }
     }
@@ -99,22 +101,26 @@ public class HeroService {
         heroRepository.save(hero);
     }
 
-    public boolean ifPossibleToRaiseStatictic(Hero hero) {
+    public String raiseStatisticsIfPossible(Hero hero,Model model) {
         if (hero.getGold() >= 500) {
             Random random = new Random();
             int rndNumber = random.nextInt(1, 4);
             if (rndNumber == 1) {
                 raiseHealthBySacrificingGold(hero, 50);
+                model.addAttribute("raiseStatMessage", "Your health increased.");
             }
             if (rndNumber == 2) {
-                raiseAttackBySacrificingGold(hero, 2, 4);
+                raiseAttackBySacrificingGold(hero, 1, 2);
+                model.addAttribute("raiseStatMessage", "Your attack increased.");
             }
             if (rndNumber == 3) {
                 raiseExperienceBySacrificingGold(hero, 500);
+                model.addAttribute("raiseStatMessage", "Your attack increased.");
             }
-            return true;
+            return "templepanel";
         } else {
-            return false;
+            model.addAttribute("goldAmountNotEnought", "Not enough gold.");
+            return "templepanel";
         }
     }
 
@@ -150,10 +156,10 @@ public class HeroService {
         hero.setGold(hero.getGold() - 20);
     }
 
-    public static void raiseHealthBySacrificingGold(Hero hero, int raiseValue) {
+    public static void raiseHealthBySacrificingGold(Hero hero, int healthRaiseValue) {
         hero.setGold(hero.getGold() - 500);
-        hero.setMaximumHealth(hero.getMaximumHealth() + raiseValue);
-        hero.setHealth(hero.getHealth() + raiseValue);
+        hero.setMaximumHealth(hero.getMaximumHealth() + healthRaiseValue);
+        hero.setHealth(hero.getHealth() + healthRaiseValue);
     }
 
     public static void raiseAttackBySacrificingGold(Hero hero, int minAttackRaiseValue, int maxAttackRaiseValue) {
@@ -165,5 +171,14 @@ public class HeroService {
     public static void raiseExperienceBySacrificingGold(Hero hero, int experienceValue) {
         hero.setGold(hero.getGold() - 500);
         hero.setExperience(hero.getExperience() + experienceValue);
+    }
+    public void checkQuestStatus(Hero hero,Quest quest,Model model) {
+        if(quest.getKilledMob() == quest.getMobCountToKill()) {
+            hero.setExperience(hero.getExperience() + quest.getExperiencePrize());
+            hero.setGold(hero.getGold() + quest.getGoldPrize());
+            quest.setKilledMob(0);
+            hero.getQuests().remove(quest);
+            model.addAttribute("questCompleted", "You have completed your quest. Earned " + quest.getGoldPrize() + " gold and " +quest.getExperiencePrize() + " experience.");
+        }
     }
 }
