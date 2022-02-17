@@ -5,10 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.gm.project.model.Hero;
-import pl.gm.project.model.Item;
-import pl.gm.project.model.Mob;
-import pl.gm.project.model.User;
+import pl.gm.project.model.*;
 import pl.gm.project.service.*;
 
 import java.time.LocalDateTime;
@@ -24,10 +21,11 @@ public class GamePanelController {
     private final UserService userService;
     private final MobService mobService;
     private final FightService fightService;
+    private final QuestService questService;
 
     @ModelAttribute("user")
-    public CurrentUserDetails getUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
-        return currentUserDetails;
+    public User getUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
+        return userService.get(currentUserDetails.getUser().getId());
     }
 
     @ModelAttribute("userHero")
@@ -42,6 +40,19 @@ public class GamePanelController {
         } else {
             return userService.get(currentUserDetails.getUser().getId()).getHero().getItems();
         }
+    }
+    @ModelAttribute("heroQuests")
+    public List<Quest> getHeroQuests(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
+        if (userService.get(currentUserDetails.getUser().getId()).getHero() == null) {
+            return new ArrayList<>();
+        } else {
+            return userService.get(currentUserDetails.getUser().getId()).getHero().getQuests();
+        }
+    }
+
+    @ModelAttribute("quests")
+    public List<Quest> getQuests(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
+        return questService.listAll();
     }
 
     @ModelAttribute("shopItems")
@@ -78,11 +89,8 @@ public class GamePanelController {
     @GetMapping("/temple/raise_random_stat")
     public String raiseRandomStat(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
-        heroService.ifPossibleToRaiseStatictic(hero);
+        heroService.raiseStatisticsIfPossible(hero,model);
         heroService.levelUpifPossible(hero);
-        if (!heroService.ifPossibleToRaiseStatictic(hero)) {
-            model.addAttribute("goldAmountNotEnought", "Not enough gold.");
-        }
         return "templepanel";
     }
 
@@ -171,5 +179,13 @@ public class GamePanelController {
     public String buyHpPotion(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model) {
         Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
         return heroService.buyHpPotion(hero,model);
+    }
+
+    @GetMapping("/quest/take/{id}")
+    public String takeQuest(@AuthenticationPrincipal CurrentUserDetails currentUserDetails, Model model, @PathVariable long id) {
+        Hero hero = userService.get(currentUserDetails.getUser().getId()).getHero();
+        Quest questToTake = questService.get(id);
+        questService.takeQuestIfPossible(hero,questToTake,model);
+        return "templepanel";
     }
 }
