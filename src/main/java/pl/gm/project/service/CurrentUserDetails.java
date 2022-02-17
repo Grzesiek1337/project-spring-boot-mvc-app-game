@@ -36,48 +36,6 @@ public class CurrentUserDetails implements UserDetails {
         return user.getUsername();
     }
 
-    public Hero getUserHero() {return user.getHero();
-    }
-
-    public String getUserHeroName() {
-        return user.getHero().getName();
-    }
-
-    public Integer getUserMinAttack() {
-        return user.getHero().getMinAttack();
-    }
-
-    public Integer getUserMaxAttack() {
-        return user.getHero().getMaxAttack();
-    }
-
-    public Integer getUserHeroHealth() {
-        return user.getHero().getHealth();
-    }
-
-    public Integer getUserHeroMaximumHealth() {
-        return user.getHero().getMaximumHealth();
-    }
-
-    public Integer getUserHeroLevel() {
-        return user.getHero().getLevel();
-    }
-
-    public Integer getUserHeroExperience() {
-        return user.getHero().getExperience();
-    }
-
-    public Integer getUserHeroGold() {
-        return user.getHero().getGold();
-    }
-
-    public Integer getUserHeroHpPotions() {
-        return user.getHero().getHpPotions();
-    }
-    public Integer getUserHeroExpThreshold() {
-        return user.getHero().getExperienceThreshold();
-    }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
