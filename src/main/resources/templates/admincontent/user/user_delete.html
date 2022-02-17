@@ -15,8 +15,8 @@
     <div class="d-flex flex-column">
         <a class="text-white text-decoration-none"
            th:text="${' Are you sure you want to remove hero with id ' + userId + ' ?'}"></a>
-        <a th:href="@{'/admin/user_delete/' + ${userId}}">Yes</a>
-        <a th:href="@{'/admin/user_list'}">No</a>
+        <a th:href="@{'/admin/user/delete/' + ${userId}}">Yes</a>
+        <a th:href="@{'/admin/user/list'}">No</a>
     </div>
 </div>
 <footer th:replace="fragments/generalfragments.html :: footer"></footer>
