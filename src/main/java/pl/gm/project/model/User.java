@@ -21,15 +21,11 @@ public class User {
     @NotBlank
     @Size(min = 3,max=20)
     private String username;
-
     @NotBlank
-    @Size(min = 3)
+    @Size(min = 3,max=255)
     private String password;
-
     private String role;
-
     private boolean enabled;
-
     @OneToOne(cascade = { CascadeType.REMOVE, CascadeType.MERGE })
     @JoinColumn(name = "hero_id")
     private Hero hero;
