@@ -10,7 +10,7 @@
 <header th:insert="fragments/generalfragments.html :: header"> </header>
 <header th:insert="fragments/generalfragments.html :: loggedNaviBar"> </header>
 <div class="bg-dark d-flex justify-content-center">
-    <form action="#" th:action="@{/admin/hero_edit}" th:object="${hero}" method="post">
+    <form action="#" th:action="@{/admin/hero/edit}" th:object="${hero}" method="post">
         <table>
             <tr>
                 <td class="text-white text-decoration-none">Hero ID:</td>
@@ -22,6 +22,12 @@
                 <td class="text-white text-decoration-none">Owner ID:</td>
                 <td>
                     <input type="text" th:field="*{user.id}" readonly="readonly" />
+                </td>
+            </tr>
+            <tr>
+                <td class="text-white text-decoration-none">Items:</td>
+                <td>
+                    <input type="text" th:field="*{items}" readonly="readonly" />
                 </td>
             </tr>
             <tr>
@@ -67,6 +73,10 @@
                 <td><input type="number" th:field="*{gold}"/></td>
             </tr>
             <tr>
+                <td class="text-white text-decoration-none">Dodge Chance:</td>
+                <td><input type="number" th:field="*{dodgeChance}"/></td>
+            </tr>
+            <tr>
                 <td class="text-white text-decoration-none">HP Potion:</td>
                 <td><input type="number" th:field="*{hpPotions}"/></td>
             </tr>
@@ -74,7 +84,7 @@
                 <td ><button type="submit">Save</button> </td>
             </tr>
         </table>
-        <a class="text-decoration-none" style="color: yellow" th:href="@{'/admin/hero_list'}">Return</a>
+        <a class="text-decoration-none" style="color: yellow" th:href="@{'/admin/hero/list'}">Return</a>
     </form>
 </div>
 <footer th:replace="fragments/generalfragments.html :: footer"></footer>
