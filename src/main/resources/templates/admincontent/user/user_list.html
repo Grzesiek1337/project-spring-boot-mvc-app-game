@@ -27,7 +27,7 @@
             <td class="text-white text-decoration-none" th:text="${user.role}">Name</td>
             <td class="text-white text-decoration-none" th:text="${user.enabled}">Health</td>
             <td>
-                <a th:href="@{'/admin/user_remove/' + ${user.id}}">Delete</a>
+                <a th:href="@{'/admin/user/remove/' + ${user.id}}">Delete</a>
             </td>
         </tr>
         </tbody>
