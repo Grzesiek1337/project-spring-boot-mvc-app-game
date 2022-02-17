@@ -23,20 +23,19 @@ public class UserController {
 
     private final UserService userService;
     private final HeroService heroService;
-    private final UserRepository userRepository;
 
-    @GetMapping("/user_create")
+    @GetMapping("/create")
     public String showNewUserCreatePageForUser(Model model) {
         model.addAttribute("user", new User());
         return "usercontent/user/user_create";
     }
 
-    @PostMapping("/user_create")
+    @PostMapping("/create")
     public String saveUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model) {
-        return userService.checkAndSaveUser(user,bindingResult,model);
+        return userService.checkAndSaveUserByUser(user,bindingResult,model);
     }
 
-    @PostMapping("/hero_create")
+    @PostMapping("/hero/create")
     public String saveHeroForUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails,Hero hero) {
         heroService.createHeroForUser(currentUserDetails,hero);
         return "redirect:/game";
