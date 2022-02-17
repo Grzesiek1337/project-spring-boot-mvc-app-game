@@ -22,13 +22,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void save(User user) {
+    public void saveUserByAdmin(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setEnabled(true);
         userRepository.save(user);
     }
 
-    public String checkAndSaveUser(User user, BindingResult bindingResult, Model model) {
+    public String checkAndSaveUserByUser(User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "usercontent/user/user_create";
         }
