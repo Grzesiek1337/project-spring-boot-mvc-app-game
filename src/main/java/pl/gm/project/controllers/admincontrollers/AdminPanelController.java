@@ -5,10 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.gm.project.model.Hero;
-import pl.gm.project.model.Item;
-import pl.gm.project.model.Mob;
-import pl.gm.project.model.User;
+import pl.gm.project.model.*;
 import pl.gm.project.service.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +19,7 @@ public class AdminPanelController {
     private final UserService userService;
     private final ItemService itemService;
     private final MobService mobService;
+    private final QuestService questService;
 
     @ModelAttribute("user")
     public User getUser(@AuthenticationPrincipal CurrentUserDetails currentUserDetails) {
@@ -136,6 +134,37 @@ public class AdminPanelController {
     @PostMapping("/mob/new")
     public String saveMobByAdminToDatabase(@ModelAttribute("mob") Mob mob) {
         mobService.save(mob);
+        return "redirect:/admin";
+    }
+    @GetMapping("/quest/list")
+    public String viewListOfQuestsForAdmin(Model model) {
+        List<Quest> quests = questService.listAll();
+        model.addAttribute("questList", quests);
+        return "admincontent/quest/quest-list";
+    }
+
+    @GetMapping("/quest/new")
+    public String showNewQuestFormForAdmin(Model model) {
+        model.addAttribute("quest", new Quest());
+        return "admincontent/quest/quest-new";
+    }
+
+    @PostMapping("/quest/new")
+    public String saveQuestByAdminToDatabase(@ModelAttribute("quest") Quest quest) {
+        questService.save(quest);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/quest/edit/{id}")
+    public String showEditQuestFormForAdmin(@PathVariable(name = "id") int id, Model model) {
+        Quest quest = questService.get(id);
+        model.addAttribute("quest", quest);
+        return "admincontent/quest/quest-edit";
+    }
+
+    @PostMapping("/quest/edit")
+    public String updateQuestByAdmin(Quest quest) {
+        questService.update(quest);
         return "redirect:/admin";
     }
 }
