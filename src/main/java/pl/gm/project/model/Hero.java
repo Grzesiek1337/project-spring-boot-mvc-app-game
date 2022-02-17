@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.*;
 
-
 @Entity
 @Getter
 @Setter
@@ -25,15 +24,18 @@ public class Hero {
     private int experienceThreshold;
     private int gold;
     private int hpPotions;
-
+    private int dodgeChance;
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "heroes_items", joinColumns = @JoinColumn(name = "hero_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id"))
     private List<Item> items = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "heroes_quests", joinColumns = @JoinColumn(name = "hero_id"),
+            inverseJoinColumns = @JoinColumn(name = "quest_id"))
+    private List<Quest> quests = new ArrayList<>();
 
 
 }
