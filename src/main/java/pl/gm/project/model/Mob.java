@@ -4,6 +4,7 @@ package pl.gm.project.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Random;
 
 @Entity
 @Table(name = "mobs")
@@ -21,6 +22,11 @@ public class Mob {
     private int maxAttack;
     private int health;
     private int level;
+
+    public Integer getMobAttackFromMinToMax() {
+        Random random = new Random();
+        return random.nextInt(this.getMinAttack(), this.getMaxAttack() + 1);
+    }
 
 
 }

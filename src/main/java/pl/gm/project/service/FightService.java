@@ -16,8 +16,9 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class FightService {
 
-    private  final HeroService heroService;
+    private final HeroService heroService;
     private final QuestService questService;
+    private final MobService mobService;
 
     public String oneTurnHeroVsMob(Hero hero,Mob mob, Model model) {
         Random random = new Random();

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import pl.gm.project.model.Hero;
 import pl.gm.project.model.Item;
+import pl.gm.project.model.Mob;
 import pl.gm.project.model.Quest;
 import pl.gm.project.repository.HeroRepository;
 import pl.gm.project.repository.UserRepository;
@@ -101,7 +102,7 @@ public class HeroService {
         heroRepository.save(hero);
     }
 
-    public String raiseStatisticsIfPossible(Hero hero,Model model) {
+    public String raiseStatisticsIfPossible(Hero hero, Model model) {
         if (hero.getGold() >= 500) {
             Random random = new Random();
             int rndNumber = random.nextInt(1, 4);
@@ -139,8 +140,8 @@ public class HeroService {
         hero.setExperienceThreshold(hero.getExperienceThreshold() + 50);
     }
 
-    public void regenerateAfterDeath(Hero hero) {
-        hero.setHealth(15);
+    public static void regenerateAfterDeath(Hero hero) {
+        hero.setHealth(25);
     }
 
     public void healByPotion(Hero hero) {
@@ -172,13 +173,55 @@ public class HeroService {
         hero.setGold(hero.getGold() - 500);
         hero.setExperience(hero.getExperience() + experienceValue);
     }
-    public void checkQuestStatus(Hero hero,Quest quest,Model model) {
-        if(quest.getKilledMob() == quest.getMobCountToKill()) {
+
+    public void checkQuestStatus(Hero hero, Quest quest, Model model) {
+        if (quest.getKilledMob() == quest.getMobCountToKill()) {
             hero.setExperience(hero.getExperience() + quest.getExperiencePrize());
             hero.setGold(hero.getGold() + quest.getGoldPrize());
             quest.setKilledMob(0);
             hero.getQuests().remove(quest);
-            model.addAttribute("questCompleted", "You have completed your quest. Earned " + quest.getGoldPrize() + " gold and " +quest.getExperiencePrize() + " experience.");
+            model.addAttribute("questCompleted", "You have completed your quest. Earned " + quest.getGoldPrize() + " gold and " + quest.getExperiencePrize() + " experience.");
         }
+    }
+
+    public boolean checkingDodgeChance(Hero hero) {
+        Random random = new Random();
+        int randomNumberToCheck = random.nextInt(101);
+        return randomNumberToCheck <= hero.getDodgeChance();
+    }
+    public boolean isHeroHitPointMoreThanZero(Hero hero,Model model) {
+        if (hero.getHealth() <= 0) {
+            model.addAttribute("failedWonFight", "You have lost this fight.Your health have been regenerated.");
+            regenerateAfterDeath(hero);
+            return false;
+        }
+        return true;
+    }
+
+    public void getHitFromMonster(Hero hero, Mob mob,Model model) {
+        Integer mobAttack = mob.getMobAttackFromMinToMax();
+        model.addAttribute("hitHeroMsg", "You have taken  " + mobAttack + " damage from " + mob.getName());
+        hero.setHealth(hero.getHealth() - mobAttack);
+    }
+
+    public void oneHitToMonster(Hero hero,Mob mob,Model model) {
+        Random random = new Random();
+        int heroAttack = random.nextInt(hero.getMinAttack(), hero.getMaxAttack() + 1);
+        mob.setHealth(mob.getHealth() - heroAttack);
+        model.addAttribute("hitMobMsg", "You have attacked " + mob.getName() + " for " + heroAttack + " damege.");
+
+    }
+
+    public void setPrizeAfterFight(Hero hero,Mob mob,Model model) {
+        Random random = new Random();
+        int earnedGold = random.nextInt(mob.getLevel() * 10, mob.getLevel() * 20);
+        int earnedExperience = random.nextInt(mob.getLevel() * 20, mob.getLevel() * 40);
+        hero.setGold(hero.getGold() + earnedGold);
+        hero.setExperience(hero.getExperience() + earnedExperience);
+
+
+        model.addAttribute("successWonFightMsg", "You have won the fight!");
+        model.addAttribute("earnedGold", "You have earned " + earnedGold + " gold.");
+        model.addAttribute("earnedExperience", "You have earned " + earnedExperience + " experience.");
     }
 }
